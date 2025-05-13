@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #D2E8E3;
+            color: #2C3532;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2C3532;
+            padding: 1rem 0;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        .topbar ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .topbar ul li {
+            margin: 0 2.5rem;
+        }
+        .topbar ul li a {
+            color: #D8B08C;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .topbar ul li a:hover {
+            color: #D8B08C;
+        }
+        main {
+            flex: 1;
+            padding-top: 4rem;
+            padding-bottom: 2rem;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .form-container h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: #0F6466;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2C3532;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #D2E8E3;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            color: #2C3532;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #0F6466;
+            box-shadow: 0 0 0 3px rgba(15, 100, 102, 0.15);
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 120px;
+        }
+        .btn-primary {
+            background-color: #0F6466;
+            color: #D8B08C;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 300px;
+        }
+        .btn-primary:hover {
+            background-color: #0A4D4D;
+            transform: scale(1.03);
+        }
+        .footer {
+            background-color: #2C3532;
+            padding: 2.5rem 0;
+            text-align: center;
+            color: #D8B08C;
+            border-top: 1px solid #0F6466;
+            margin-top: auto;
+        }
+        .g-recaptcha {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+        #honeypot {
+            display: none;
+        }
+        @media (max-width: 640px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+            .form-group input, .form-group textarea {
+                padding: 0.6rem;
+                font-size: 0.95rem;
+            }
+            .btn-primary {
+                padding: 0.75rem 1.25rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <script>
+        var onloadCallback = function() {
+            grecaptcha.render('recaptcha-element', {
+                'sitekey' : 'SUA_CHAVE_DO_SITE_RECAPTCHA'
+            });
+        };
+    </script>
+</head>
+<body class="bg-gray-100">
+    <header class="topbar">
+        <nav>
+            <ul>
+                <li><a href="#" id="home-link">Home</a></li>
+                <li><a href="projetos.html">Projetos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container mx-auto">
+            <div class="form-container">
+                <h1>Entre em Contato</h1>
+                <form id="contact-form" method="POST" action="enviar_email.php">
+                    <div class="form-group" id="honeypot">
+                        <label for="email_address">Email Address:</label>
+                        <input type="text" id="email_address" name="email_address">
+                    </div>
+                    <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem:</label>
+                        <textarea id="mensagem" name="mensagem" required></textarea>
+                    </div>
+                    <div class="g-recaptcha" id="recaptcha-element"></div>
+                    <button type="submit" class="btn-primary">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2014 Fachadas Arquitetônicas. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const homeLink = document.getElementById('home-link');
+
+        if (homeLink) {
+            homeLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                window.history.back();
+            });
+        }
+
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const mensagem = document.getElementById('mensagem').value;
+            const honeypotValue = document.getElementById('email_address').value;
+            const recaptchaResponse = grecaptcha.getResponse();
+
+
+            if (nome.trim() === '' || email.trim() === '' || mensagem.trim() === '') {
+                alert('Por favor, preencha todos os campos do formulário.');
+                return;
+            }
+
+            if (honeypotValue !== '') {
+                alert('Parece que você é um robô!');
+                return;
+            }
+
+            if (!recaptchaResponse) {
+                alert('Por favor, complete o reCAPTCHA.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('nome', nome);
+            formData.append('email', email);
+            formData.append('mensagem', mensagem);
+            formData.append('recaptcha_response', recaptchaResponse);
+
+
+            fetch('enviar_email.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+                    document.getElementById('nome').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('mensagem').value = '';
+                    grecaptcha.reset();
+                } else {
+                    throw new Error('Erro ao enviar a mensagem.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente mais tarde.');
+            });
+        });
+    </script>
+</body>
+</html>

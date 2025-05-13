@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos de Fachadas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #D2E8E3;
+            color: #2C3532;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2C3532;
+            padding: 1rem 0;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        .topbar ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .topbar ul li {
+            margin: 0 2.5rem;
+        }
+        .topbar ul li a {
+            color: #D8B08C;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .topbar ul li a:hover {
+            color: #D8B08C;
+        }
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .carousel-slide {
+            display: none;
+            width: 100%;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            position: relative;
+            transform: translateX(20px);
+            opacity: 0;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .carousel-slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+            z-index: 2;
+        }
+        .carousel-control {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .carousel-control:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            transform: scale(1.05);
+        }
+        .project-info {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            background-color: rgba(255, 203, 154, 0.85);
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.375rem;
+            font-size: 1.1rem;
+            color: #2C3532;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .image-grid img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .image-grid img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        @media (min-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+        #detalhes-projeto {
+            display: none;
+        }
+        #detalhes-projeto.show {
+            display: block;
+        }
+        .cascata-imagens img {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .cascata-imagens img.mostrar {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .footer {
+            background-color: #2C3532;
+            padding: 2.5rem 0;
+            text-align: center;
+            color: #D8B08C;
+            border-top: 1px solid #0F6466;
+            margin-top: auto;
+        }
+        .gradient-bg {
+            background: linear-gradient(to bottom, #2C3532, rgba(44, 53, 50, 0.1));
+            padding: 8rem 0 6rem 0;
+            text-align: center;
+        }
+        .gradient-bg h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #D8B08C;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .gradient-bg p {
+            font-size: 1.3rem;
+            color: #D8B08C;
+            max-width: 85%;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: #0F6466;
+            margin-bottom: 2rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .section-title.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .project-grid {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .project-grid.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #detalhes-projeto {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            display: none;
+        }
+        #detalhes-projeto.show {
+            opacity: 1;
+        }
+        main {
+            background-color: #F5EAE7;
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="topbar">
+        <nav>
+            <ul>
+                <li><a href="contatoSiteGemini.html">Contato</a></li>
+                <li><a href="projetos.html">Projetos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="gradient-bg">
+            <h1 class="text-3xl font-semibold text-gray-800">Projetos de Fachadas Exclusivas</h1>
+            <p class="text-xl text-gray-700">Transformamos sua visão em realidade com design e inovação.</p>
+            <img src="https://images.unsplash.com/photo-1549786881-9d038a63c1d3?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fachada de Casa Moderna" class="mt-6 rounded-lg shadow-md" style="width: 80%; margin: 0 auto;">
+        </section>
+
+        <section class="carousel-container">
+            <div class="carousel-slide active">
+                <img src="https://via.placeholder.com/800x400/FFCB9A/2C3532?text=A" alt="Projeto A" style="background-color: #FFCB9A;">
+                <div class="project-info">Projeto Residencial Moderno</div>
+            </div>
+            <div class="carousel-slide">
+                <img src="https://via.placeholder.com/800x400/D8B08C/2C3532?text=B" alt="Projeto B" style="background-color: #D8B08C;">
+                <div class="project-info">Casa de Campo Aconchegante</div>
+            </div>
+            <div class="carousel-slide">
+                <img src="https://via.placeholder.com/800x400/0F6466/FFFFFF?text=C" alt="Projeto C" style="background-color: #0F6466;">
+                <div class="project-info">Residência Urbana Elegante</div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-control prev" onclick="prevSlide()">❮</button>
+                <button class="carousel-control next" onclick="nextSlide()">❯</button>
+            </div>
+        </section>
+
+        <section id="projetos" class="container mx-auto mt-8 p-4">
+            <h2 class="section-title">Nossos Projetos</h2>
+            <div class="image-grid project-grid" id="project-grid">
+                <a href="projetos.html?id=projeto1">
+                    <img src="https://via.placeholder.com/400x300/FFFF00/000000?text=D" alt="Projeto D" data-project="projeto1" style="background-color: #FFFF00;">
+                </a>
+                <a href="projetos.html?id=projeto2">
+                    <img src="https://via.placeholder.com/400x300/FF69B4/000000?text=E" alt="Projeto E" data-project="projeto2" style="background-color: #FF69B4;">
+                </a>
+                <a href="projetos.html?id=projeto3">
+                    <img src="https://via.placeholder.com/400x300/87CEFA/000000?text=F" alt="Projeto F" data-project="projeto3" style="background-color: #87CEFA;">
+                </a>
+            </div>
+        </section>
+
+        <section id="contato" class="container mx-auto mt-8 p-4">
+            <h2 class="section-title">Contato</h2>
+            <p class="text-lg text-gray-700 text-center">Entre em contato conosco para discutir seu próximo projeto!</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2014 Fachadas Arquitetônicas. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const carouselSlides = document.querySelectorAll('.carousel-slide');
+        const carouselControls = document.querySelectorAll('.carousel-control');
+        let currentSlide = 0;
+        let projetoSelecionado = null;
+
+        function showSlide(n) {
+            carouselSlides[currentSlide].classList.remove('active');
+            currentSlide = (n + carouselSlides.length) % carouselSlides.length;
+            carouselSlides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        carouselControls.forEach(control => {
+            control.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (control.classList.contains('next')) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            });
+        });
+
+        setInterval(nextSlide, 5000);
+
+        const projectGrid = document.getElementById('project-grid');
+        projectGrid.addEventListener('mouseover', (event) => {
+            const target = event.target;
+            if (target.tagName === 'IMG') {
+                target.style.transform = 'scale(1.04)';
+                target.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }
+        });
+
+        projectGrid.addEventListener('mouseout', (event) => {
+            const target = event.target;
+            if (target.tagName === 'IMG') {
+                target.style.transform = 'scale(1)';
+                target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+
+
+        const imagensCascataContainer = document.getElementById('imagens-cascata');
+        function mostrarDetalhesProjeto(projeto) {
+            imagensCascataContainer.innerHTML = '';
+            let imagens = [];
+             if (projeto === 'projeto1') {
+                imagens = [
+                    "https://images.unsplash.com/photo-1560185893-a55cbc64fe50?q=80&w=3275&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1580476262700-c55159495156?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1591604108004-6815b7afe70a?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ];
+            } else if (projeto === 'projeto2') {
+                imagens = [
+                    "https://images.unsplash.com/photo-1600585154340-be6561c36dbb?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1627394200764-95564402b1a2?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1571623007621-f9f427494d75?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ];
+            } else if (projeto === 'projeto3') {
+                imagens = [
+                    "https://images.unsplash.com/photo-1560762417-74b489569b88?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1613490495764-7c913e9c27a9?q=80&w=3289&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "https://images.unsplash.com/photo-1614741118887-5b4178745586?q=80&w=3269&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                ];
+            }
+
+            imagensCascataContainer.innerHTML = '';
+            imagens.forEach((imagem, index) => {
+                const img = document.createElement('img');
+                img.src = imagem;
+                img.classList.add('cascata-imagens');
+                img.style.animationDelay = `${index * 0.2}s`;
+                imagensCascataContainer.appendChild(img);
+                setTimeout(() => {
+                    img.classList.add('mostrar');
+                }, 100);
+            });
+            const detalhesProjetoSection = document.getElementById('detalhes-projeto');
+            detalhesProjetoSection.classList.add('show');
+             window.scrollTo({
+                top: detalhesProjetoSection.offsetTop,
+                behavior: 'smooth'
+            });
+
+        }
+
+        function verificarElementosVisiveis() {
+            const sections = document.querySelectorAll('.section-title, .project-grid, #detalhes-projeto');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const windowHeight = window.innerHeight;
+                const scrollY = window.scrollY;
+
+                if (scrollY > sectionTop + sectionHeight / 2 - windowHeight) {
+                    section.classList.add('show');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', verificarElementosVisiveis);
+        verificarElementosVisiveis();
+    </script>
+</body>
+</html>
