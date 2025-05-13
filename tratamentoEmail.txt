@@ -1,0 +1,252 @@
+**1. enviar_email.php**
+
+```php
+<?php
+// Configurações de e-mail
+$destinatario = "seu_email@example.com"; // Substitua pelo seu endereço de e-mail
+$assunto = "Nova mensagem de contato do site";
+
+// Verifica se o formulário foi enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validação e sanitização dos dados
+    $nome = filter_var($_POST["nome"], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
+    $mensagem = filter_var($_POST["mensagem"], FILTER_SANITIZE_STRING);
+    $honeypot = $_POST["email_address"]; // Campo honeypot
+
+    // Verifica se o honeypot está preenchido (spam)
+    if (!empty($honeypot)) {
+        http_response_code(400);
+        echo "Parece que você é um robô!";
+        exit;
+    }
+
+    // Validação adicional do e-mail
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo "E-mail inválido.";
+        exit;
+    }
+
+    // Verifica se o reCAPTCHA foi preenchido
+    $recaptcha_secret = "SUA_CHAVE_SECRETA_RECAPTCHA"; // Substitua pela sua chave secreta do reCAPTCHA
+    $recaptcha_response = $_POST['recaptcha_response'];
+    $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+    $recaptcha_data = [
+        'secret'  => $recaptcha_secret,
+        'response'  => $recaptcha_response
+    ];
+
+    $recaptcha_options = [
+        'http' => [
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($recaptcha_data)
+        ]
+    ];
+    $recaptcha_context  = stream_context_create($recaptcha_options);
+    $recaptcha_result = json_decode(file_get_contents($recaptcha_url, false, $recaptcha_context));
+
+    if (!$recaptcha_result->success) {
+        http_response_code(400);
+        echo "reCAPTCHA inválido.";
+        exit;
+    }
+
+    // Monta o corpo do e-mail
+    $corpo = "Nome: " . $nome . "\n";
+    $corpo .= "Email: " . $email . "\n";
+    $corpo .= "Mensagem: " . $mensagem . "\n";
+
+    // Envia o e-mail
+    $headers = "From: " . $email . "\r\n";
+    $headers .= "Reply-To: " . $email . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    if (mail($destinatario, $assunto, $corpo, $headers)) {
+        http_response_code(200);
+        echo "Mensagem enviada com sucesso!";
+    } else {
+        http_response_code(500);
+        echo "Erro ao enviar a mensagem.";
+    }
+} else {
+    http_response_code(403);
+    echo "Acesso proibido.";
+}
+?>
+```
+
+**2. enviar_email.py (Python)**
+
+```python
+import smtplib
+from email.mime.text import MIMEText
+from flask import Flask, request, abort
+import requests
+
+app = Flask(__name__)
+
+@app.route('/enviar_email', methods=['POST'])
+def enviar_email():
+    # Configurações de e-mail
+    destinatario = "seu_email@example.com"  # Substitua pelo seu endereço de e-mail
+    assunto = "Nova mensagem de contato do site"
+
+    # Verifica se o formulário foi enviado
+    if request.method == 'POST':
+        # Validação e sanitização dos dados
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        mensagem = request.form.get('mensagem')
+        honeypot = request.form.get('email_address')  # Campo honeypot
+
+        # Verifica se o honeypot está preenchido (spam)
+        if honeypot:
+            abort(400, "Parece que você é um robô!")
+
+        # Validação adicional do e-mail
+        if not email or '@' not in email:
+            abort(400, "E-mail inválido.")
+
+        # Verifica se o reCAPTCHA foi preenchido
+        recaptcha_secret = "SUA_CHAVE_SECRETA_RECAPTCHA"  # Substitua pela sua chave secreta do reCAPTCHA
+        recaptcha_response = request.form.get('recaptcha_response')
+        recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
+        recaptcha_data = {
+            'secret': recaptcha_secret,
+            'response': recaptcha_response
+        }
+        try:
+            recaptcha_result = requests.post(recaptcha_url, data=recaptcha_data).json()
+        except requests.exceptions.RequestException as e:
+            abort(500, f"Erro ao conectar com o reCAPTCHA: {e}")
+
+        if not recaptcha_result.get('success'):
+            abort(400, "reCAPTCHA inválido.")
+
+        # Monta o corpo do e-mail
+        corpo = f"Nome: {nome}\nEmail: {email}\nMensagem: {mensagem}"
+
+        # Envia o e-mail
+        try:
+            # Configurações do servidor SMTP (substitua com as suas)
+            smtp_server = 'smtp.example.com'
+            smtp_port = 587
+            smtp_username = 'seu_email@example.com'
+            smtp_password = 'sua_senha'
+
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+
+            msg = MIMEText(corpo)
+            msg['Subject'] = assunto
+            msg['From'] = email
+            msg['To'] = destinatario
+
+            server.sendmail(email, [destinatario], msg.as_string())
+            server.quit()
+            return "Mensagem enviada com sucesso!", 200
+        except Exception as e:
+            abort(500, f"Erro ao enviar o e-mail: {e}")
+    else:
+        abort(403, "Acesso proibido.")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+**3. enviar_email.js (Node.js)**
+
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const { google } = require('googleapis');
+const mailer = require('nodemailer');
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.post('/enviar_email', async (req, res) => {
+    // Configurações de e-mail
+    const destinatario = "seu_email@example.com"; // Substitua pelo seu endereço de e-mail
+    const assunto = "Nova mensagem de contato do site";
+
+    // Validação e sanitização dos dados
+    const nome = req.body.nome;
+    const email = req.body.email;
+    const mensagem = req.body.mensagem;
+    const honeypot = req.body.email_address; // Campo honeypot
+
+    // Verifica se o honeypot está preenchido (spam)
+    if (honeypot) {
+        return res.status(400).send("Parece que você é um robô!");
+    }
+
+    // Validação adicional do e-mail
+    if (!email || !email.includes('@')) {
+        return res.status(400).send("E-mail inválido.");
+    }
+
+    // Verifica se o reCAPTCHA foi preenchido
+    const recaptchaSecret = "SUA_CHAVE_SECRETA_RECAPTCHA"; // Substitua pela sua chave secreta do reCAPTCHA
+    const recaptchaResponse = req.body.recaptcha_response;
+    const recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+    const recaptchaData = {
+        secret: recaptchaSecret,
+        response: recaptchaResponse
+    };
+
+    try {
+        const recaptchaRes = await fetch(recaptchaUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(recaptchaData).toString()
+        });
+        const recaptchaResult = await recaptchaRes.json();
+
+        if (!recaptchaResult.success) {
+            return res.status(400).send("reCAPTCHA inválido.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar com o reCAPTCHA:", error);
+        return res.status(500).send("Erro ao verificar o reCAPTCHA.");
+    }
+
+    // Monta o corpo do e-mail
+    const corpo = `Nome: ${nome}\nEmail: ${email}\nMensagem: ${mensagem}`;
+
+    // Envia o e-mail
+    try {
+        // Configurações do serviço de e-mail (substitua com as suas)
+        const transporter = mailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'seu_email@example.com',
+                pass: 'sua_senha'
+            }
+        });
+
+        const mailOptions = {
+            from: email,
+            to: destinatario,
+            subject: assunto,
+            text: corpo
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).send("Mensagem enviada com sucesso!");
+    } catch (error) {
+        console.error("Erro ao enviar o e-mail:", error);
+        res.status(500).send("Erro ao enviar a mensagem.");
+    }
+});
+
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
+});
+```
