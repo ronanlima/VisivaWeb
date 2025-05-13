@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #D2E8E3;
+            background-color: #F5EAE7;
             color: #2C3532;
             display: flex;
             flex-direction: column;
@@ -213,23 +213,107 @@
             background-color: #F5EAE7;
             flex: 1;
         }
+
+        .cta-button {
+            background-color: #D8B08C;
+            color: #2C3532;
+            padding: 1rem 2.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            background-color: #C69E7A;
+            transform: scale(1.05);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .header-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #D8B08C;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-description {
+            font-size: 1.5rem;
+            color: #D8B08C;
+            max-width: 70%;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            .header-description {
+                font-size: 1.2rem;
+            }
+            .cta-button {
+                font-size: 1rem;
+                padding: 0.8rem 2rem;
+            }
+            .topbar ul li {
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                height: auto;
+                padding: 4rem 2rem;
+            }
+            .header-title {
+                font-size: 2rem;
+            }
+            .header-description {
+                font-size: 1rem;
+                max-width: 95%;
+            }
+            .cta-button {
+                font-size: 0.9rem;
+                padding: 0.75rem 1.5rem;
+            }
+            .topbar ul li {
+                margin: 0 0.5rem;
+            }
+            .topbar ul li a {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
     <header class="topbar">
         <nav>
             <ul>
-                <li><a href="contatoSiteGemini.html">Contato</a></li>
+                <li><a href="contato.html">Contato</a></li>
                 <li><a href="projetos.html">Projetos</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="gradient-bg">
-            <h1 class="text-3xl font-semibold text-gray-800">Projetos de Fachadas Exclusivas</h1>
-            <p class="text-xl text-gray-700">Transformamos sua visão em realidade com design e inovação.</p>
-            <img src="https://images.unsplash.com/photo-1549786881-9d038a63c1d3?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fachada de Casa Moderna" class="mt-6 rounded-lg shadow-md" style="width: 80%; margin: 0 auto;">
+        <section class="gradient-bg header-content">
+            <h1 class="header-title">Projetos de Fachadas Exclusivas</h1>
+            <p class="header-description">Transformamos sua visão em realidade com design e inovação.</p>
+            <a href="#projetos" class="cta-button">Ver Projetos</a>
         </section>
 
         <section class="carousel-container">
